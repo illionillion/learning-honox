@@ -3,6 +3,7 @@ import { createRoute } from "honox/factory";
 import type { FC } from "hono/jsx";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
+import { createArticle } from "../../lib/db";
 
 const titleClass = css`
   font-size: 1.5rem;
@@ -112,14 +113,15 @@ const Article = z.object({
 });
 
 export const POST = createRoute(
-  zValidator("form", Article, (result, c) => {
+  zValidator("form", Article, async (result, c) => {
+    const { title, content } = result.data;
     if (result.success) {
       // TODO DB に保存する
       console.log(result.data);
+      await createArticle({ title, content });
       return c.redirect("/articles");
     }
 
-    const { title, content } = result.data;
     const data: Data = {
       title: {
         value: title,
