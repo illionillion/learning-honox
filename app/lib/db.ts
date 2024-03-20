@@ -53,3 +53,16 @@ export const getArticles = async () => {
 
   return [];
 };
+
+export const getArticleById = async (id: string) => {
+  const articlesPath = path.join(__dirname, "data", "articles.json");
+  const exists = existsSync(articlesPath);
+  if (exists) {
+    const articlesJSON = readFileSync(articlesPath, {
+      encoding: "utf-8",
+    });
+    const articles = JSON.parse(articlesJSON) as Article[];
+    return articles.find((article) => article.id === id);
+  }
+  return {} as Article ;
+};
