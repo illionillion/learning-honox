@@ -64,5 +64,18 @@ export const getArticleById = async (id: string) => {
     const articles = JSON.parse(articlesJSON) as Article[];
     return articles.find((article) => article.id === id);
   }
-  return {} as Article ;
+  return {} as Article;
+};
+
+export const deleteArticle = async (id: string) => {
+  const articlesPath = path.join(__dirname, "data", "articles.json");
+  const exists = existsSync(articlesPath);
+  if (exists) {
+      const articlesJSON = readFileSync(articlesPath, {
+        encoding: "utf-8",
+      });
+      const articles = JSON.parse(articlesJSON) as Article[];
+      const newArticles = articles.filter((article) => article.id !== id);
+      writeFileSync(articlesPath, JSON.stringify(newArticles));
+  }
 };
